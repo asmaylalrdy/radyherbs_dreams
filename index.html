@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rady Healing & Dreams | رضي للعلاج والأحلام</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Rady Healing & Dreams</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#87ceeb">
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
@@ -15,157 +15,148 @@
             --soft-bg: #f0f7f9;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* منع التداخل وضمان استقرار الشاشة */
+        body, html {
+            height: 100%;
             margin: 0;
+            padding: 0;
+            overflow-x: hidden;
             background-color: var(--soft-bg);
-            color: #2c3e50;
+            font-family: 'Segoe UI', sans-serif;
         }
+
+        /* صفحة الترحيب */
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        #splash-screen img { width: 150px; border-radius: 50%; border: 4px solid var(--rady-green); }
+
+        /* الواجهة الرئيسية */
+        .main-app { display: none; padding-bottom: 50px; }
 
         .header {
             background: linear-gradient(180deg, var(--rady-blue), #ffffff);
-            padding: 30px 15px;
+            padding: 20px;
             text-align: center;
-            border-bottom-left-radius: 40px;
-            border-bottom-right-radius: 40px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-bottom: 2px solid var(--rady-green);
+            position: sticky; top: 0; z-index: 100;
         }
 
         .logo-box {
-            width: 110px;
-            height: 110px;
-            margin: 0 auto 10px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            overflow: hidden;
-            border: 3px solid var(--rady-green);
+            width: 80px; height: 80px; margin: 0 auto;
+            background: white; border-radius: 50%; overflow: hidden;
+            border: 2px solid var(--rady-green);
         }
 
-        .logo-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .logo-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        .wisdom-badge {
-            background: var(--rady-green);
-            color: white;
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            margin-top: 5px;
-        }
-
-        .container {
-            padding: 20px;
-            max-width: 500px;
-            margin: -20px auto 0;
-        }
+        .container { padding: 15px; max-width: 500px; margin: 0 auto; }
 
         .card {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            border: 1px solid rgba(135, 206, 235, 0.2);
+            background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
-        h3 { margin-top: 0; color: var(--rady-green); }
-
         input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 2px solid #e1f0f7;
-            border-radius: 12px;
-            box-sizing: border-box;
+            width: 100%; padding: 12px; margin: 10px 0;
+            border: 2px solid #e1f0f7; border-radius: 12px; box-sizing: border-box;
         }
 
         button {
-            background: linear-gradient(to left, var(--rady-green), #66bb6a);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            font-size: 1.1em;
-            white-space: nowrap;
+            background: var(--rady-green); color: white; border: none;
+            padding: 12px; border-radius: 12px; width: 100%; font-weight: bold;
         }
 
-        #result-box {
-            display: none;
-            background: white;
-            border-radius: 15px;
-            padding: 15px;
-            margin-top: 10px;
-            border-right: 5px solid var(--rady-yellow);
-            animation: fadeIn 0.4s ease;
+        /* منطقة الإجابة الذكية */
+        #result-display {
+            display: none; background: #fff; border-radius: 15px; padding: 15px;
+            margin-top: 10px; border-right: 5px solid var(--rady-yellow);
+            max-height: 200px; overflow-y: auto; /* يسمح بالتمرير إذا كانت الإجابة طويلة */
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* قسم الإعدادات (حول المطور) */
+        .about-section {
+            font-size: 0.8em; text-align: center; color: #7f8c8d; margin-top: 20px;
+            border-top: 1px solid #ddd; padding-top: 15px;
+        }
+
+        .about-section a { color: var(--rady-blue); text-decoration: none; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="logo-box">
-            <img src="IMG-20250801-WA0004 (3).jpeg" alt="Rady Logo" onerror="this.src='https://via.placeholder.com/110?text=Rady'">
-        </div>
-        <h1 style="font-size: 1.4rem; color: #2980b9;">Rady Healing & Dreams</h1>
-        <div id="wisdom-txt" class="wisdom-badge">تحميل الحكمة...</div>
+    <div id="splash-screen">
+        <img src="IMG-20250801-WA0004 (3).jpeg" alt="Logo">
+        <h2 style="color: var(--rady-blue);">Rady Healing & Dreams</h2>
+        <p>جاري تهيئة النظام البيئي...</p>
     </div>
 
-    <div class="container">
-        <div class="card">
-            <h3>🌿 قسم الأعشاب</h3>
-            <input type="text" id="herb-in" placeholder="مثال: صداع، قولون...">
-            <button onclick="doSearch('herbs')">اطلب العلاج الآن</button>
+    <div class="main-app" id="app-content">
+        <div class="header">
+            <div class="logo-box">
+                <img src="IMG-20250801-WA0004 (3).jpeg" alt="Logo">
+            </div>
+            <h1 style="font-size: 1.2rem; margin: 5px 0;">رضي للعلاج والأحلام</h1>
         </div>
 
-        <div class="card">
-            <h3>🌙 تفسير الأحلام</h3>
-            <input type="text" id="dream-in" placeholder="مثال: بحر، طيران...">
-            <button onclick="doSearch('dreams')">فسر رؤيتك الآن</button>
-        </div>
+        <div class="container">
+            <div class="card">
+                <h3>🌿 الأعشاب والمنفعة</h3>
+                <input type="text" id="herb-q" placeholder="بماذا تشعر؟">
+                <button onclick="handleSearch('herbs')">اطلب الوصفة</button>
+            </div>
 
-        <div id="result-box"></div>
+            <div class="card">
+                <h3>🌙 تفسير الرؤى</h3>
+                <input type="text" id="dream-q" placeholder="ماذا رأيت؟">
+                <button onclick="handleSearch('dreams')">فسر الآن</button>
+            </div>
+
+            <div id="result-display"></div>
+
+            <div class="about-section">
+                <p>إصدار التطبيق: v1.0.2 (Pi Mainnet Ready)</p>
+                <p>المشرف والمطور: <strong>Ismail Ahmed Ismail</strong></p>
+                <p>تواصل: <a href="mailto:asmaylalrdy744@gmail.com">asmaylalrdy744@gmail.com</a></p>
+                <p><a href="https://github.com/asmaylalrdy744">تابعنا على GitHub</a></p>
+            </div>
+        </div>
     </div>
 
     <script>
-        const radyDB = {
-            herbs: {
-                "صداع": "يُنصح بمغلي البابونج وتدليك الصدغين بزيت النعناع.",
-                "قولون": "اليانسون والشمر هما الأفضل لتهدئة القولون العصبي.",
-                "سعال": "ورق الجوافة المغلي مع العسل دافئاً."
-            },
-            dreams: {
-                "بحر": "رزق واسع واستقرار إذا كان هادئاً.",
-                "طيران": "سفر قريب أو نيل مكانة رفيعة.",
-                "ذهب": "أخبار سعيدة أو مناسبات مفرحة قادمة."
-            },
-            wisdoms: ["الصحة ثروة الإنسان.", "الغذاء خير دواء.", "الوقاية خير من العلاج."]
+        // إخفاء صفحة الترحيب بعد 2.5 ثانية
+        setTimeout(() => {
+            document.getElementById('splash-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('splash-screen').style.display = 'none';
+                document.getElementById('app-content').style.display = 'block';
+            }, 500);
+        }, 2500);
+
+        const localDB = {
+            herbs: { "صداع": "مغلي البابونج وتدليك الصدغ بزيت النعناع.", "قولون": "اليانسون والشمر دافئاً." },
+            dreams: { "بحر": "رزق واسع واستقرار.", "طيران": "سفر أو مكانة رفيعة." }
         };
 
-        function doSearch(cat) {
-            const val = document.getElementById(cat === 'herbs' ? 'herb-in' : 'dream-in').value;
-            const res = document.getElementById('result-box');
-            let match = Object.keys(radyDB[cat]).find(k => val.includes(k));
+        function handleSearch(type) {
+            const val = document.getElementById(type === 'herbs' ? 'herb-q' : 'dream-q').value;
+            const res = document.getElementById('result-display');
+            let match = Object.keys(localDB[type]).find(k => val.includes(k));
+            
             res.style.display = "block";
-            res.innerHTML = match ? `<strong>النتيجة:</strong><br>${radyDB[cat][match]}` : "لم نجد نتيجة دقيقة، حاول بكلمة أخرى.";
-        }
-
-        document.getElementById('wisdom-txt').innerText = "حكمة اليوم: " + radyDB.wisdoms[new Date().getDate() % 3];
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js'); });
+            if (match) {
+                res.innerHTML = `<strong>النتيجة:</strong><br>${localDB[type][match]}`;
+            } else {
+                res.innerHTML = "<strong>تنبيه:</strong> لم نجد هذه الحالة في القاعدة المحلية. سيتم ربط الخدمة بذكاء Gemini قريباً لتوفير إجابات شاملة.";
+            }
+            // التمرير تلقائياً للإجابة
+            res.scrollIntoView({ behavior: 'smooth' });
         }
     </script>
 </body>
