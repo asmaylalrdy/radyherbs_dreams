@@ -1,11 +1,12 @@
-const CACHE_NAME = 'rady-herbs-v1';
+const CACHE_NAME = 'rady-cache-v2';
 const assets = [
   '/',
   '/index.html',
-  // أضف هنا مسارات أي ملفات CSS أو صور تستخدمها
+  '/manifest.json',
+  '/IMG-20250801-WA0004 (3).jpeg',
+  '/IMG-20250801-WA0004 (3) (2).jpeg'
 ];
 
-// تثبيت الـ Service Worker وتخزين الملفات
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
@@ -14,7 +15,6 @@ self.addEventListener('install', event => {
   );
 });
 
-// تفعيل العمل بدون إنترنت
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request).then(response => {
