@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="html-tag">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -14,140 +14,143 @@
             --bg-color: #f0f7f9;
         }
 
-        body, html {
-            height: 100%; margin: 0; padding: 0;
-            overflow: hidden; background-color: var(--bg-color);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        body, html { height: 100%; margin: 0; padding: 0; overflow: hidden; background-color: var(--bg-color); font-family: 'Segoe UI', sans-serif; }
 
-        /* صفحة الترحيب (Splash Screen) */
-        #splash {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: white; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 9999;
-            transition: opacity 0.8s ease;
-        }
+        /* صفحة الترحيب */
+        #splash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.8s ease; }
+        #splash img { width: 160px; border-radius: 50%; border: 4px solid var(--rady-green); margin-bottom: 15px; }
 
-        #splash img { width: 160px; border-radius: 50%; border: 5px solid var(--rady-green); margin-bottom: 20px; }
+        /* الهيكل الرئيسي */
+        .app-wrapper { display: none; height: 100vh; flex-direction: column; }
+        .header { background: linear-gradient(180deg, var(--rady-blue), #ffffff); padding: 10px; text-align: center; border-bottom: 3px solid var(--rady-green); flex-shrink: 0; position: relative; }
+        .header img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--rady-green); object-fit: cover; }
 
-        /* الهيكل الرئيسي لمنع اختفاء العناصر */
-        .app-wrapper {
-            display: none; height: 100vh; display: flex; flex-direction: column;
-        }
+        /* زر تغيير اللغة */
+        .lang-btn { position: absolute; top: 15px; left: 15px; background: white; border: 1px solid var(--rady-green); padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 0.8em; font-weight: bold; }
+        [dir="ltr"] .lang-btn { left: auto; right: 15px; }
 
-        .header {
-            background: linear-gradient(180deg, var(--rady-blue), #ffffff);
-            padding: 15px; text-align: center; border-bottom: 3px solid var(--rady-green);
-            flex-shrink: 0; /* يمنع الهيدر من الانكماش أو الاختفاء */
-        }
+        .content-scroll { flex-grow: 1; overflow-y: auto; padding: 15px; -webkit-overflow-scrolling: touch; }
+        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #e1f0f7; border-radius: 12px; box-sizing: border-box; }
+        button { background: var(--rady-green); color: white; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        
+        #result-display { display: none; background: #fff; border-radius: 15px; padding: 15px; margin-top: 10px; border-right: 6px solid var(--rady-yellow); line-height: 1.8; font-size: 0.95em; }
+        [dir="ltr"] #result-display { border-right: none; border-left: 6px solid var(--rady-yellow); }
 
-        .content-scroll {
-            flex-grow: 1; overflow-y: auto; padding: 15px;
-        }
-
-        .card {
-            background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid rgba(135, 206, 235, 0.3);
-        }
-
-        input {
-            width: 100%; padding: 12px; margin: 10px 0;
-            border: 2px solid #e1f0f7; border-radius: 12px; box-sizing: border-box;
-        }
-
-        button {
-            background: var(--rady-green); color: white; border: none;
-            padding: 14px; border-radius: 12px; width: 100%; font-weight: bold;
-            font-size: 1.1em; cursor: pointer; transition: 0.3s;
-        }
-
-        button:active { transform: scale(0.98); }
-
-        /* صندوق النتائج الذكي */
-        #result-display {
-            display: none; background: #fff; border-radius: 15px; padding: 15px;
-            margin-top: 10px; border-right: 6px solid var(--rady-yellow);
-            line-height: 1.6; border-left: 1px solid #eee; border-bottom: 1px solid #eee;
-        }
-
-        /* معلومات المطور (About) */
-        .about-info {
-            text-align: center; font-size: 0.85em; color: #7f8c8d;
-            padding: 20px; border-top: 1px solid #ddd; margin-top: 10px;
-        }
-
-        .about-info a { color: var(--rady-green); text-decoration: none; font-weight: bold; }
+        .about-info { text-align: center; font-size: 0.85em; color: #7f8c8d; padding: 25px 15px; border-top: 1px solid #ddd; margin-top: 20px; }
+        
+        .loading-dots:after { content: ' .'; animation: dots 1.5s steps(5, end) infinite; }
+        @keyframes dots { 0%, 20% { color: rgba(0,0,0,0); text-shadow: .5em 0 0 rgba(0,0,0,0), 1em 0 0 rgba(0,0,0,0); } 40% { color: var(--rady-green); text-shadow: .5em 0 0 rgba(0,0,0,0), 1em 0 0 rgba(0,0,0,0); } 60% { text-shadow: .5em 0 0 var(--rady-green), 1em 0 0 rgba(0,0,0,0); } 80%, 100% { text-shadow: .5em 0 0 var(--rady-green), 1em 0 0 var(--rady-green); } }
     </style>
 </head>
 <body>
 
     <div id="splash">
-        <img src="IMG-20250801-WA0004 (3).jpeg" alt="Rady Logo">
-        <h2 style="color: var(--rady-blue); margin: 0;">Rady Healing & Dreams</h2>
-        <p style="color: #7f8c8d;">مرحباً بك في عالم الصحة والرؤى</p>
+        <img src="IMG-20250801-WA0004 (3).jpeg" alt="Logo">
+        <h2 id="splash-title" style="color: var(--rady-blue); margin: 5px 0;">Rady Healing & Dreams</h2>
+        <p id="splash-sub">مرحباً بك في عالم الصحة والرؤى</p>
     </div>
 
-    <div class="app-wrapper" id="main-content" style="display: none;">
+    <div class="app-wrapper" id="main-content">
         <div class="header">
-            <div style="width: 60px; height: 60px; margin: 0 auto; border-radius: 50%; overflow: hidden; border: 2px solid var(--rady-green);">
-                <img src="IMG-20250801-WA0004 (3).jpeg" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            <h1 style="font-size: 1.2rem; margin: 8px 0; color: #2c3e50;">رضي للعلاج والأحلام</h1>
+            <button class="lang-btn" onclick="toggleLanguage()" id="lang-toggle">English</button>
+            <img src="IMG-20250801-WA0004 (3).jpeg" alt="Rady Logo">
+            <h1 id="app-name" style="font-size: 1.15rem; margin: 5px 0; color: #2c3e50;">رضي للعلاج والأحلام</h1>
         </div>
 
         <div class="content-scroll">
             <div class="card">
-                <h3 style="color: var(--rady-green); margin-top: 0;">🌿 مستشارك العشبي</h3>
-                <input type="text" id="herb-input" placeholder="اكتب ما تشعر به (مثلاً: ألم الركبة)...">
-                <button onclick="processRequest('herbs')">اطلب الوصفة الآن</button>
+                <h3 id="herb-title" style="color: var(--rady-green); margin-top: 0;">🌿 استشارة عشبية ذكية</h3>
+                <input type="text" id="herb-in" placeholder="بماذا تشعر؟...">
+                <button id="herb-btn" onclick="askGemini('herbs')">اطلب الوصفة الآن</button>
             </div>
 
             <div class="card">
-                <h3 style="color: #9b59b6; margin-top: 0;">🌙 مفسر الأحلام الذكي</h3>
-                <input type="text" id="dream-input" placeholder="اكتب رمز حلمك (مثلاً: طيران)...">
-                <button onclick="processRequest('dreams')" style="background: #9b59b6;">فسر حلمك الآن</button>
+                <h3 id="dream-title" style="color: #9b59b6; margin-top: 0;">🌙 تفسير الرؤى العميق</h3>
+                <input type="text" id="dream-in" placeholder="ماذا رأيت في حلمك؟...">
+                <button id="dream-btn" onclick="askGemini('dreams')" style="background: #9b59b6;">فسر حلمك الآن</button>
             </div>
 
             <div id="result-display"></div>
 
-            <div class="about-info">
-                <p>إصدار التطبيق: v1.0.2 (Pi Network Ready)</p>
-                <p>المشرف والمطور: <strong>Ismail Ahmed Ismail</strong></p>
-                <p>GitHub: <a href="https://github.com/asmaylalrdy744" target="_blank">asmaylalrdy744</a></p>
-                <p>Email: <a href="mailto:asmaylalrdy744@gmail.com">asmaylalrdy744@gmail.com</a></p>
+            <div class="about-info" id="about-box">
+                <p id="app-ver">إصدار ذكي: v1.1.0 | Pi Mainnet Ready</p>
+                <p id="dev-name">المشرف والمطور: <strong>Ismail Ahmed Ismail</strong></p>
+                <p>GitHub: <a href="https://github.com/asmaylalrdy744" target="_blank" style="color:var(--rady-blue)">asmaylalrdy744</a></p>
             </div>
         </div>
     </div>
 
     <script>
-        // التحكم في صفحة الترحيب
-        window.onload = () => {
-            setTimeout(() => {
-                const splash = document.getElementById('splash');
-                splash.style.opacity = '0';
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                    document.getElementById('main-content').style.display = 'flex';
-                }, 800);
-            }, 3000); // تظهر لمدة 3 ثوانٍ
+        const API_KEY = "AIzaSyA0l2CUmJOH45cpemJCWKFPlrNPme7x5oE";
+        let currentLang = 'ar';
+
+        const i18n = {
+            ar: {
+                app: "رضي للعلاج والأحلام", hTitle: "🌿 استشارة عشبية ذكية", hBtn: "اطلب الوصفة الآن",
+                dTitle: "🌙 تفسير الرؤى العميق", dBtn: "فسر حلمك الآن", splash: "مرحباً بك في عالم الصحة والرؤى",
+                dev: "المشرف والمطور: ", loading: "جاري استشارة المحرك الذكي", resHead: "الرد الذكي:"
+            },
+            en: {
+                app: "Rady Healing & Dreams", hTitle: "🌿 Smart Herbal Advice", hBtn: "Get Recipe Now",
+                dTitle: "🌙 Deep Dream Meaning", dBtn: "Interpret Now", splash: "Welcome to Health & Visions",
+                dev: "Admin & Developer: ", loading: "Consulting AI Engine", resHead: "Smart Response:"
+            }
         };
 
-        // دالة المعالجة وربط الذكاء الاصطناعي
-        async function processRequest(type) {
-            const input = document.getElementById(type === 'herbs' ? 'herb-input' : 'dream-input').value;
-            const display = document.getElementById('result-display');
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            const html = document.getElementById('html-tag');
+            html.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            html.lang = currentLang;
             
-            if (!input) return;
+            document.getElementById('lang-toggle').innerText = currentLang === 'ar' ? 'English' : 'العربية';
+            document.getElementById('app-name').innerText = i18n[currentLang].app;
+            document.getElementById('herb-title').innerText = i18n[currentLang].hTitle;
+            document.getElementById('herb-btn').innerText = i18n[currentLang].hBtn;
+            document.getElementById('dream-title').innerText = i18n[currentLang].dTitle;
+            document.getElementById('dream-btn').innerText = i18n[currentLang].dBtn;
+            document.getElementById('splash-sub').innerText = i18n[currentLang].splash;
+            document.getElementById('dev-name').innerHTML = `${i18n[currentLang].dev} <strong>Ismail Ahmed Ismail</strong>`;
+        }
+
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('splash').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('splash').style.display = 'none';
+                    document.getElementById('main-content').style.display = 'flex';
+                }, 800);
+            }, 3000);
+        };
+
+        async function askGemini(type) {
+            const promptInput = document.getElementById(type === 'herbs' ? 'herb-in' : 'dream-in').value;
+            const display = document.getElementById('result-display');
+            if (!promptInput) return;
 
             display.style.display = "block";
-            display.innerHTML = "<strong>جاري التفكير...</strong> جاري استشارة الذكاء الاصطناعي لتوفير أدق إجابة لك.";
+            display.innerHTML = `<span class='loading-dots'>${i18n[currentLang].loading}</span>`;
+            display.scrollIntoView({ behavior: 'smooth' });
 
-            // هنا نضع الكود الذي سيتحدث مع Gemini API مستقبلاً
-            // في الوقت الحالي سنقوم بمحاكاة الرد الذكي لضمان عمل الواجهة
-            setTimeout(() => {
-                display.innerHTML = `<strong>الرد الذكي:</strong><br>لقد استقبلنا استفسارك حول "${input}". نحن نقوم الآن بربط محرك Gemini لتوفير إجابة موسوعة شاملة. بصفتك المطور <strong>Ismail</strong>، يمكنك الآن وضع مفتاح الـ API الخاص بك هنا لتفعيل الإجابات الحية لآلاف الأمراض.`;
+            const context = type === 'herbs' 
+                ? `You are an expert in herbal medicine. Provide a safe and brief recipe in ${currentLang === 'ar' ? 'Arabic' : 'English'} for: ` 
+                : `You are a professional dream interpreter. Explain clearly and briefly in ${currentLang === 'ar' ? 'Arabic' : 'English'}: `;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: context + promptInput }] }] })
+                });
+
+                const data = await response.json();
+                const text = data.candidates[0].content.parts[0].text;
+                display.innerHTML = `<strong>${i18n[currentLang].resHead}</strong><br>${text.replace(/\n/g, '<br>')}`;
                 display.scrollIntoView({ behavior: 'smooth' });
-            }, 1500);
+            } catch (error) {
+                display.innerHTML = "Error connecting to AI. Please try again.";
+            }
         }
     </script>
 </body>
