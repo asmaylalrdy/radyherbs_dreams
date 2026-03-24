@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rady-cache-v2';
+const CACHE_NAME = 'rady-healing-v3';
 const assets = [
   '/',
   '/index.html',
@@ -7,6 +7,7 @@ const assets = [
   '/IMG-20250801-WA0004 (3) (2).jpeg'
 ];
 
+// تثبيت ملفات التطبيق في ذاكرة الهاتف
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
@@ -15,6 +16,7 @@ self.addEventListener('install', event => {
   );
 });
 
+// استدعاء الملفات من الذاكرة عند عدم وجود إنترنت
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request).then(response => {
