@@ -1,21 +1,25 @@
 {
-  "name": "Rady Herbs & Dreams",
-  "short_name": "Rady Herbs",
-  "description": "تطبيق رضي للأعشاب وتفسير الأحلام",
+  "name": "Rady Healing & Dreams",
+  "short_name": "Rady Healing",
+  "description": "رضي للعلاج والأحلام - استشارات عشبية وتفسير رؤى",
   "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#5e2d89",
+  "background_color": "#87ceeb",
+  "theme_color": "#87ceeb",
+  "dir": "rtl",
+  "lang": "ar",
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
