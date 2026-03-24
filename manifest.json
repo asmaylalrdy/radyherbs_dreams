@@ -6,20 +6,19 @@
       "src": "IMG-20250801-WA0004 (3).jpeg",
       "sizes": "192x192",
       "type": "image/jpeg",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "IMG-20250801-WA0004 (3) (2).jpeg",
       "sizes": "512x512",
       "type": "image/jpeg",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ],
-  "start_url": ".",
+  "start_url": "/index.html",
   "display": "standalone",
   "theme_color": "#87ceeb",
   "background_color": "#ffffff",
-  "orientation": "portrait",
   "scope": "/",
-  "description": "Smart Health and Dream Interpretations by Ismail Ahmed Ismail"
+  "id": "rady-app-1"
 }
