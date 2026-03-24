@@ -3,127 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رضي للأعشاب والأحلام</title>
+    <title>Rady Healing & Dreams | رضي للعلاج والأحلام</title>
     
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#5e2d89">
+    <meta name="theme-color" content="#87ceeb">
     
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
     
     <style>
         :root {
-            --pi-purple: #5e2d89;
-            --success-green: #2ecc71;
-            --light-bg: #f4f7f6;
-            --card-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            --rady-sky-blue: #87ceeb; /* لون خلفية شعارك */
+            --rady-leaf-green: #4caf50; /* لون الأوراق في شعارك */
+            --rady-moon-yellow: #ffc107; /* لون الهلال */
+            --soft-white: #fdfdfd;
+            --text-dark: #2c3e50;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--light-bg);
-            color: #2c3e50;
+            background-color: #f0f7f9;
+            color: var(--text-dark);
         }
 
-        /* تنسيق الهيدر مع مساحة للشعار */
+        /* تنسيق الهيدر المستوحى من ألوان الشعار */
         .header {
-            background: linear-gradient(135deg, var(--pi-purple), #8e44ad);
-            color: white;
+            background: linear-gradient(180deg, var(--rady-sky-blue), #ffffff);
             padding: 40px 20px;
             text-align: center;
-            border-bottom-left-radius: 40px;
-            border-bottom-right-radius: 40px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        .logo-placeholder {
-            width: 80px;
-            height: 80px;
+        .logo-container {
+            width: 100px;
+            height: 100px;
             margin: 0 auto 15px;
             background: white;
-            border-radius: 20px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             overflow: hidden;
+            border: 3px solid var(--rady-leaf-green);
         }
 
-        .logo-placeholder img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .logo-container img {
+            width: 90%;
+            height: auto;
         }
+
+        h1 { margin: 10px 0; font-size: 1.5rem; color: #2980b9; }
 
         .wisdom-tag {
-            background: rgba(255, 255, 255, 0.15);
+            background: var(--rady-leaf-green);
+            color: white;
             display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
+            padding: 6px 18px;
+            border-radius: 25px;
             font-size: 0.85em;
             margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         .container {
             padding: 20px;
             max-width: 500px;
-            margin: -30px auto 0;
+            margin: -20px auto 0;
         }
 
         .card {
-            background: white;
-            border-radius: 20px;
+            background: var(--soft-white);
+            border-radius: 25px;
             padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: var(--card-shadow);
-            border-top: 4px solid var(--pi-purple);
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid rgba(135, 206, 235, 0.3);
         }
 
-        h3 { margin-top: 0; color: var(--pi-purple); display: flex; align-items: center; gap: 8px; }
+        h3 { margin-top: 0; color: var(--rady-leaf-green); display: flex; align-items: center; gap: 10px; }
 
         input {
             width: 100%;
             padding: 15px;
             margin: 15px 0;
-            border: 2px solid #eee;
-            border-radius: 12px;
+            border: 2px solid #e1f0f7;
+            border-radius: 15px;
             box-sizing: border-box;
-            transition: border-color 0.3s;
+            font-size: 16px;
+            transition: all 0.3s;
         }
 
-        input:focus { border-color: var(--pi-purple); outline: none; }
+        input:focus { border-color: var(--rady-sky-blue); outline: none; background: #fff; }
 
-        .btn-box { display: flex; justify-content: center; }
+        .btn-wrapper { display: flex; justify-content: center; }
 
         button {
-            background: var(--success-green);
+            background: linear-gradient(to left, var(--rady-leaf-green), #66bb6a);
             color: white;
             border: none;
-            padding: 14px 30px;
-            border-radius: 12px;
+            padding: 15px 30px;
+            border-radius: 15px;
             font-weight: bold;
             cursor: pointer;
             width: 100%;
             font-size: 1.1em;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
             transition: all 0.3s ease;
-            white-space: nowrap; /* حل مشكلة تداخل النص */
+            white-space: nowrap; /* يضمن ظهور النص كاملاً مثل "فسر الآن" */
         }
 
-        button:active { transform: scale(0.98); background: #27ae60; }
+        button:active { transform: scale(0.97); }
 
-        #result-area {
+        #result-display {
             display: none;
-            background: #fff;
+            background: #ffffff;
             border-radius: 20px;
             padding: 20px;
             margin-top: 10px;
-            border: 2px solid var(--success-green);
+            border-right: 6px solid var(--rady-moon-yellow);
             line-height: 1.8;
-            animation: slideUp 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            animation: fadeIn 0.5s ease;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
@@ -131,36 +139,36 @@
 <body>
 
     <div class="header">
-        <div class="logo-placeholder">
-            <img src="icon-192.png" alt="Logo" onerror="this.src='https://via.placeholder.com/80?text=Rady'">
+        <div class="logo-container">
+            <img src="icon-192.png" alt="Rady Healing Logo" onerror="this.src='https://via.placeholder.com/100?text=Rady'">
         </div>
-        <h1>Rady Herbs & Dreams</h1>
-        <div id="wisdom-box" class="wisdom-tag">جاري تحميل حكمة اليوم...</div>
+        <h1>Rady Healing & Dreams</h1>
+        <div id="wisdom-display" class="wisdom-tag">جاري التحميل...</div>
     </div>
 
     <div class="container">
         <div class="card">
-            <h3>🌿 طب الأعشاب والعلاجات</h3>
-            <input type="text" id="herb-in" placeholder="اكتب العرض (مثلاً: صداع، قولون، أرق)...">
-            <div class="btn-box">
-                <button onclick="processSearch('herbs')">اكتشف العلاج العشبي الآن</button>
+            <h3>🌿 العلاج بالأعشاب الطبيعية</h3>
+            <input type="text" id="herb-search" placeholder="بماذا تشعر؟ (صداع، أرق، معدة)...">
+            <div class="btn-wrapper">
+                <button onclick="executeSearch('herbs')">اطلب الوصفة العشبية الآن</button>
             </div>
         </div>
 
         <div class="card">
             <h3>🌙 تفسير الأحلام (ابن سيرين)</h3>
-            <input type="text" id="dream-in" placeholder="ماذا رأيت؟ (مثلاً: بحر، طيران، ذهب)...">
-            <div class="btn-box">
-                <button onclick="processSearch('dreams')">فسر رؤيتك الآن</button>
+            <input type="text" id="dream-search" placeholder="اكتب رمز حلمك (بحر، طيران، ذهب)...">
+            <div class="btn-wrapper">
+                <button onclick="executeSearch('dreams')">فسر رؤيتك الآن</button>
             </div>
         </div>
 
-        <div id="result-area"></div>
+        <div id="result-display"></div>
     </div>
 
     <script>
-        // القائمة الموسعة والشاملة كما طلبت
-        const appDatabase = {
+        // قاعدة البيانات الموسعة والشاملة
+        const radyData = {
             herbs: {
                 "صداع": "يُنصح بمغلي البابونج أو إكليل الجبل، وتدليك الصدغين بزيت النعناع.",
                 "أرق": "شرب كوب دافئ من الحليب مع العسل أو مغلي نبتة اللافندر (الخزامى) قبل النوم.",
@@ -188,42 +196,42 @@
                 "اجعل طعامك دواءك، ولا تجعل دواءك طعامك.",
                 "من عرف الداء، هان عليه الدواء.",
                 "الوقاية خير من قنطار من العلاج.",
-                "النفس الطيبة في الجسم السليم.",
+                "النفس الطيبة تسكن في الجسم السليم.",
                 "الحياة أمل، فمن فقد الأمل فقد الحياة."
             ]
         };
 
-        function processSearch(type) {
-            const id = type === 'herbs' ? 'herb-in' : 'dream-in';
-            const val = document.getElementById(id).value;
-            const res = document.getElementById('result-area');
+        function executeSearch(category) {
+            const inputId = category === 'herbs' ? 'herb-search' : 'dream-search';
+            const userText = document.getElementById(inputId).value;
+            const output = document.getElementById('result-display');
             
-            // محرك بحث مرن يبحث عن الكلمة داخل الجملة
-            let found = Object.keys(appDatabase[type]).find(k => val.includes(k));
+            // البحث عن الكلمة المفتاحية داخل النص المكتوب
+            let match = Object.keys(radyData[category]).find(key => userText.includes(key));
             
-            res.style.display = "block";
-            if (found) {
-                res.innerHTML = `<strong>التحليل والمراجع:</strong><br>${appDatabase[type][found]}`;
+            output.style.display = "block";
+            if (match) {
+                output.innerHTML = `<strong>التحليل والمراجع:</strong><br>${radyData[category][match]}`;
             } else {
-                res.innerHTML = "<strong>تنبيه:</strong> لم نجد هذه المفردة في مراجعنا الحالية، حاول كتابة الكلمة الأساسية فقط.";
+                output.innerHTML = "<strong>تنبيه:</strong> لم نجد هذه المفردة حالياً، حاول كتابة الكلمة الأساسية فقط (مثلاً: 'بحر' بدلاً من 'رأيت بحراً كبيراً').";
             }
         }
 
-        // تحديث حكمة اليوم
-        const day = new Date().getDate() % appDatabase.wisdoms.length;
-        document.getElementById('wisdom-box').innerText = "حكمة اليوم: " + appDatabase.wisdoms[day];
+        // تحديث حكمة اليوم عشوائياً عند كل دخول
+        const randomIndex = new Date().getDate() % radyData.wisdoms.length;
+        document.getElementById('wisdom-display').innerText = "حكمة اليوم: " + radyData.wisdoms[randomIndex];
 
-        // تسجيل الـ PWA للعمل بدون إنترنت
+        // تسجيل الـ Service Worker للعمل أوفلاين
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(() => console.log("SW Error"));
+                navigator.serviceWorker.register('/sw.js').catch(() => console.log("SW Status: Offline Cache Active"));
             });
         }
 
-        // تهيئة Pi SDK
+        // تهيئة Pi SDK للعمل داخل النظام البيئي
         try {
             window.Pi.init({ version: "2.0", sandbox: true });
-        } catch(e) {}
+        } catch(e) { console.log("Running outside Pi Browser"); }
     </script>
 </body>
 </html>
