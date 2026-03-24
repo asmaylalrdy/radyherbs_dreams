@@ -3,22 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rady Herbs & Dreams</title>
+    <title>رضي للأعشاب والأحلام</title>
+    <link rel="manifest" href="manifest.json">
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f4f4f4; }
-        .container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1 { color: #5e2d89; } /* لون مشابه للون Pi */
+        :root { --main-color: #5e2d89; --secondary-color: #2ecc71; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: #f9f9f9; color: #333; }
+        .header { background: var(--main-color); color: white; padding: 20px; text-align: center; }
+        .container { padding: 15px; max-width: 600px; margin: auto; }
+        
+        /* إصلاح مشكلة الأزرار وتداخلها */
+        .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn-group { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        button { 
+            background: var(--secondary-color); color: white; border: none; 
+            padding: 10px 20px; border-radius: 8px; cursor: pointer;
+            min-width: fit-content; white-space: nowrap; /* حل مشكلة ظهور كلمة الآن فقط */
+        }
+        
+        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
+        #result-box { background: #e8f5e9; padding: 15px; border-radius: 8px; display: none; margin-top: 10px; border-right: 5px solid var(--secondary-color); }
     </style>
 </head>
 <body>
-    <div class="container">
+
+    <div class="header">
         <h1>Rady Herbs & Dreams</h1>
-        <p>التطبيق حالياً تحت التطوير... انتظرونا قريباً!</p>
+        <p id="wisdom-text">حكمة اليوم: جاري التحميل...</p>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h3>قسم الأعشاب والطب الشعبي</h3>
+            <input type="text" id="user-illness" placeholder="اكتب ما تشعر به (مثلاً: صداع، سعال)...">
+            <button onclick="diagnose('herbs')">اطلب العلاج العشبي</button>
+        </div>
+
+        <div class="card">
+            <h3>تفسير الأحلام (ابن سيرين)</h3>
+            <input type="text" id="user-dream" placeholder="اكتب رؤيتك باختصار...">
+            <button onclick="diagnose('dreams')">فسر حلمي الآن</button>
+        </div>
+
+        <div id="result-box"></div>
     </div>
 
     <script>
-        // تهيئة الـ SDK لتفعيل الربط مع Pi
+        // 1. قاعدة بيانات أولية (يمكنك توسيعها بآلاف المدخلات)
+        const library = {
+            herbs: {
+                "صداع": "يُنصح بشرب مغلي البابونج أو تدليك الصدغين بزيت النعناع.",
+                "سعال": "أفضل علاج هو ورق الجوافة المغلي مع ملعقة عسل طبيعي.",
+                "قولون": "شرب اليانسون الدافئ وتجنب البقوليات يساعد في تهدئة القولون.",
+                "نوم": "مغلي المليسا أو اللافندر قبل النوم يساعد على الاسترخاء."
+            },
+            dreams: {
+                "بحر": "يرمز البحر في المنام إلى السلطان أو الرزق الواسع، وللعازب قد يعني الزواج.",
+                "طيران": "يدل الطيران على السفر أو نيل مرتبة عالية، وكلما علا الطيران زاد الشأن.",
+                "خاتم": "الخاتم في المنام يرمز للملك أو الزواج أو بشارة بمولود ذكر.",
+                "ماء": "الماء الصافي يرمز لحياة طيبة وشفاء من الأمراض."
+            },
+            wisdoms: [
+                "الصحة تاج على رؤوس الأصحاء.",
+                "الغذاء خير من الدواء إذا أحسن تدبيره.",
+                "من تأنّى نال ما تمنى.",
+                "النوم المبكر هو مفتاح النشاط."
+            ]
+        };
+
+        // 2. دالة التشخيص الذكية
+        function diagnose(type) {
+            const inputId = type === 'herbs' ? 'user-illness' : 'user-dream';
+            const userInput = document.getElementById(inputId).value;
+            const resultBox = document.getElementById('result-box');
+            
+            let foundKey = Object.keys(library[type]).find(key => userInput.includes(key));
+            
+            resultBox.style.display = "block";
+            if (foundKey) {
+                resultBox.innerHTML = `<strong>النتيجة:</strong><br>${library[type][foundKey]}`;
+            } else {
+                resultBox.innerHTML = "<strong>نعتذر:</strong> لم نجد هذه الحالة في مراجعنا حالياً، سيتم تحديثها قريباً.";
+            }
+        }
+
+        // 3. تغيير حكمة اليوم تلقائياً
+        const dayOfYear = new Date().getDate() % library.wisdoms.length;
+        document.getElementById('wisdom-text').innerText = "حكمة اليوم: " + library.wisdoms[dayOfYear];
+
+        // 4. تهيئة Pi SDK
         const Pi = window.Pi;
         Pi.init({ version: "2.0", sandbox: true });
     </script>
