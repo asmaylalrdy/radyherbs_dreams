@@ -20,7 +20,7 @@
             height: 100%; margin: 0; padding: 0; 
             background-color: var(--bg-color); 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden; /* يمنع التمرير الخارجي المزعج */
+            overflow: hidden;
         }
 
         /* صفحة الترحيب */
@@ -57,7 +57,7 @@
 
         .scrollable-content {
             flex-grow: 1; overflow-y: auto; padding: 15px;
-            padding-bottom: 30px; /* مساحة إضافية في الأسفل */
+            padding-bottom: 30px;
         }
 
         .card { 
@@ -82,10 +82,10 @@
 
         #result-display {
             display: none; background: #fff; border-radius: 15px;
-            padding: 20px; margin-top: 10px; border-right: 6px solid var(--rady-yellow);
+            padding: 20px; margin-top: 10px; border-right: 6px solid var(--rady-purple);
             box-shadow: 0 5px 20px rgba(0,0,0,0.08); line-height: 1.7;
         }
-        [dir="ltr"] #result-display { border-right: none; border-left: 6px solid var(--rady-yellow); }
+        [dir="ltr"] #result-display { border-right: none; border-left: 6px solid var(--rady-purple); }
 
         .medical-warning {
             background: #fff3cd; border: 1px solid #ffeeba;
@@ -144,7 +144,6 @@
     </div>
 
     <script>
-        const API_KEY = "AIzaSyA0l2CUmJOH45cpemJCWKFPlrNPme7x5oE";
         let lang = 'ar';
 
         const text = {
@@ -152,13 +151,15 @@
                 app: "رضي للعلاج والأحلام", herbH: "🌿 استشارة عشبية ذكية", herbBtn: "اطلب الوصفة الآن",
                 dreamH: "🌙 تفسير الرؤى العميق", dreamBtn: "فسر حلمك الآن", splash: "مرحباً بك في عالم الصحة والرؤى",
                 warn: "⚠️ تنبيه: هذه الوصفات للأغراض التثقيفية فقط. استشارة الطبيب المختص ضرورية قبل البدء بأي علاج عشبي، خاصة لمن يعانون من أمراض مزمنة أو الحوامل.",
-                loading: "جاري استشارة المحرك الذكي", resHead: "النتيجة الذكية:", dev: "المطور: "
+                loading: "جاري استشارة المحرك الذكي", resHead: "النتيجة الذكية:", dev: "المطور: ",
+                error: "عذراً، حدث خطأ في الاتصال بالخادم. تأكد من تفعيل مفتاح API في إعدادات Vercel."
             },
             en: {
                 app: "Rady Healing & Dreams", herbH: "🌿 Smart Herbal Advice", herbBtn: "Get Recipe Now",
                 dreamH: "🌙 Deep Dream Vision", dreamBtn: "Interpret Now", splash: "Welcome to Health & Visions",
                 warn: "⚠️ Warning: These recipes are for educational purposes only. Consulting a doctor is essential before starting any herbal treatment.",
-                loading: "Consulting AI Engine", resHead: "Smart Result:", dev: "Developer: "
+                loading: "Consulting AI Engine", resHead: "Smart Result:", dev: "Developer: ",
+                error: "Sorry, a server error occurred. Please check Vercel API key settings."
             }
         };
 
@@ -198,27 +199,29 @@
             display.innerHTML = `<span class='loading-dots'>${text[lang].loading}</span>`;
             display.scrollIntoView({ behavior: 'smooth' });
 
-            // البرومبت المحسن للحصول على المقادير والطريقة
             const prompt = type === 'herbs' 
                 ? `أنت خبير أعشاب عالمي. قدم وصفة لـ "${input}" باللغة ${lang === 'ar' ? 'العربية' : 'الإنجليزية'}. يجب أن تتضمن الإجابة: 1- المقادير بدقة. 2- طريقة التحضير. 3- كيفية الاستعمال. في النهاية، أضف جملة تؤكد على ضرورة استشارة الطبيب.`
                 : `فسر هذا الحلم "${input}" بأسلوب نفسي وديني مختصر وواضح باللغة ${lang === 'ar' ? 'العربية' : 'الإنجليزية'}.`;
 
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+                // استدعاء الوسيط الآمن على Vercel بدلاً من الاستدعاء المباشر
+                const response = await fetch('/api/interpret', {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                    body: JSON.stringify({ prompt: prompt })
                 });
 
                 const data = await response.json();
+                
                 if (data.candidates && data.candidates[0].content) {
                     const resultText = data.candidates[0].content.parts[0].text;
                     display.innerHTML = `<strong>${text[lang].resHead}</strong><br>${resultText.replace(/\n/g, '<br>')}`;
                 } else {
-                    throw new Error();
+                    throw new Error("Invalid Response");
                 }
             } catch (e) {
-                display.innerHTML = lang === 'ar' ? "خطأ في الاتصال. تأكد من الإنترنت أو مفتاح API." : "Connection error. Check internet or API key.";
+                console.error("Connection Error:", e);
+                display.innerHTML = text[lang].error;
             }
         }
     </script>
