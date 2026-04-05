@@ -17,7 +17,7 @@ export default async function handler(req, res) {
                         {
                             parts: [
                                 {
-                                    text: `أنت خبير في الأعشاب وتفسير الأحلام. أجب بشكل مفيد:\n${question}`
+                                    text: question
                                 }
                             ]
                         }
@@ -28,18 +28,27 @@ export default async function handler(req, res) {
 
         const data = await response.json();
 
-        console.log("Gemini response:", data); // 🔥 مهم للتشخيص
+        console.log("FULL GEMINI RESPONSE:", JSON.stringify(data));
 
-        // ✅ معالجة قوية لكل الحالات
-        let reply = "❌ لا توجد إجابة حالياً";
+        let reply = "❌ لا توجد إجابة";
 
-        if (data.candidates && data.candidates.length > 0) {
-            const parts = data.candidates[0].content.parts;
-            if (parts && parts.length > 0) {
-                reply = parts[0].text;
+        // 🔥 قراءة ذكية لكل الاحتمالات
+        if (data.candidates) {
+            for (let c of data.candidates) {
+                if (c.content && c.content.parts) {
+                    for (let p of c.content.parts) {
+                        if (p.text) {
+                            reply = p.text;
+                            break;
+                        }
+                    }
+                }
             }
-        } else if (data.error) {
-            reply = "❌ خطأ في API: " + data.error.message;
+        }
+
+        // لو في خطأ من Gemini
+        if (data.error) {
+            reply = "❌ " + data.error.message;
         }
 
         res.status(200).json({ reply });
