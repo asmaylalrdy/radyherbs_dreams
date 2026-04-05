@@ -3,8 +3,7 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { question } = req.body; // 🔥 عدلنا هنا
-
+    const { question } = req.body;
     const API_KEY = process.env.GEMINI_API_KEY;
 
     try {
@@ -18,7 +17,7 @@ export default async function handler(req, res) {
                         {
                             parts: [
                                 {
-                                    text: `أنت خبير في الأعشاب وتفسير الأحلام. أجب بشكل بسيط:\n${question}`
+                                    text: `أنت خبير في الأعشاب وتفسير الأحلام. أجب بشكل مفيد:\n${question}`
                                 }
                             ]
                         }
@@ -29,14 +28,23 @@ export default async function handler(req, res) {
 
         const data = await response.json();
 
-        // 🔥 أهم تعديل: استخراج النص فقط
-        const reply =
-            data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-            "لم يتم الحصول على رد";
+        console.log("Gemini response:", data); // 🔥 مهم للتشخيص
+
+        // ✅ معالجة قوية لكل الحالات
+        let reply = "❌ لا توجد إجابة حالياً";
+
+        if (data.candidates && data.candidates.length > 0) {
+            const parts = data.candidates[0].content.parts;
+            if (parts && parts.length > 0) {
+                reply = parts[0].text;
+            }
+        } else if (data.error) {
+            reply = "❌ خطأ في API: " + data.error.message;
+        }
 
         res.status(200).json({ reply });
 
     } catch (error) {
-        res.status(500).json({ reply: "خطأ في السيرفر" });
+        res.status(500).json({ reply: "❌ خطأ في السيرفر" });
     }
 }
