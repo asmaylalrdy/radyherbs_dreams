@@ -65,7 +65,7 @@
 
   <hr>
 
-  <!-- سؤال المستخدم -->
+  <!-- الذكاء -->
   <h3>💬 اسأل عن الأعشاب أو الأحلام</h3>
 
   <input type="text" id="question" placeholder="اكتب سؤالك هنا">
@@ -75,7 +75,7 @@
 
   <hr>
 
-  <!-- المنتجات -->
+  <!-- الدفع -->
   <h3>🛒 منتجات مدفوعة</h3>
 
   <button onclick="buyProduct('herbs')">وصفات علاجية 🌿 (1 Pi)</button>
@@ -110,26 +110,34 @@ async function loginWithPi() {
   }
 }
 
-// الرد على الأسئلة (حل مشكلتك 🔥)
-function answerQuestion() {
+// 🔥 الذكاء الحقيقي (Gemini)
+async function answerQuestion() {
   const q = document.getElementById("question").value;
 
   if (!q) {
-    document.getElementById("answer").innerText = "⚠️ اكتب سؤال أولاً";
+    document.getElementById("answer").innerText = "⚠️ اكتب سؤال";
     return;
   }
 
-  let response = "";
+  document.getElementById("answer").innerText = "⏳ جاري التفكير...";
 
-  if (q.includes("صداع")) {
-    response = "🌿 لعلاج الصداع: جرب شاي النعناع أو الزنجبيل.";
-  } else if (q.includes("حلم")) {
-    response = "🔮 تفسير عام: الحلم يدل على رسالة داخلية تحتاج فهم.";
-  } else {
-    response = "🤖 سيتم تطوير الذكاء لاحقاً للإجابة بشكل أدق.";
+  try {
+    const response = await fetch("/api/interpret", { // ✅ مطابق لاسم الملف
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ question: q }) // ✅ مطابق للباك اند
+    });
+
+    const data = await response.json();
+
+    document.getElementById("answer").innerText =
+      data.reply || "❌ لم يتم الحصول على رد";
+
+  } catch (error) {
+    document.getElementById("answer").innerText = "❌ خطأ في الاتصال";
   }
-
-  document.getElementById("answer").innerText = response;
 }
 
 // الدفع
